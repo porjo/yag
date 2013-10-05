@@ -99,8 +99,16 @@ func (h *RenderHandler) jsonResponse(w http.ResponseWriter, data interface{}) {
 			}
 
 			fmt.Fprintf(w, `{"target":"%s","datapoints":[`, mi.Target)
-			fmt.Fprintf(w, "[%.2f,%.0f]", mi.Datapoints[0][0], mi.Datapoints[0][1])
-			for i := 1; i < n; i++ {
+
+			startIdx := 1
+			if len(mi.Datapoints[0]) > 1 {
+				fmt.Fprintf(w, "[%.2f,%.0f]", mi.Datapoints[0][0], mi.Datapoints[0][1])
+			} else {
+				fmt.Fprintf(w, "[%.2f,%.0f]", mi.Datapoints[1][0], mi.Datapoints[1][1])
+				startIdx = 2
+			}
+
+			for i := startIdx; i < n; i++ {
 				fmt.Fprintf(w, ",[%.2f, %.0f]", mi.Datapoints[i][0], mi.Datapoints[i][1])
 			}
 			fmt.Fprintf(w, "]}")
